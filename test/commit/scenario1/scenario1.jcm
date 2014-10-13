@@ -1,0 +1,20 @@
+mas scenario1 {
+	
+    agent customer {
+    	ag-arch: commit.CommitAgArch
+    	instances: 1
+    }
+    
+    agent merchant {
+    	ag-arch: commit.CommitAgArch
+    	instances: 1
+    }
+    
+    workspace market {
+		
+	}
+    
+    asl-path: agt
+    class-path: lib
+}
+

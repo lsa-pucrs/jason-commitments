@@ -1,0 +1,5 @@
+package commit.model;
+
+public enum CommitState {
+	DETACHED, CONDITIONAL, EXPIRED, PENDING, VIOLATED, TERMINATED, ACTIVE, SATISFIED
+}
