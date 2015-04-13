@@ -44,8 +44,6 @@ public class findallbeliefs extends DefaultInternalAction {
 				Literal literal = (Literal) relB.next();
 				all.append(literal);
 			}
-		} else {
-			System.out.println("NOT FOUND FOR " + lookFor.toString());
 		}
 		return un.unifies(args[1], all);
 	}

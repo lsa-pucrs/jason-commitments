@@ -1,0 +1,16 @@
+mas scenario1 {
+	
+    agent alice {
+    	ag-arch: commit.CommitAlignAgArch
+    	instances: 1
+    }
+    
+    agent bob {
+    	ag-arch: commit.CommitAlignAgArch
+    	instances: 1
+    }
+    
+    asl-path: agt
+    class-path: lib
+}
+

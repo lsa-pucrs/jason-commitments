@@ -15,29 +15,31 @@ public class uniqueid extends DefaultInternalAction {
 
 	@Override
 	public int getMinArgs() {
-		return 5;
+		return 2;
 	}
-
-	@Override
-	public int getMaxArgs() {
-		return 5;
-	}
-
+	
 	@Override
 	public Object execute(TransitionSystem ts, final Unifier un, final Term[] args) throws Exception {
 		checkArguments(args);
-
-		String type = args[0].toString();
-		String debtor = args[1].toString();
-		String creditor = args[2].toString();
-		ListTerm bag = (ListTerm) args[3];
-
-		String hash = debtor + creditor;
-		for (Term object : bag) {
-			hash += object.toString();
+		
+		String hash = "";
+		for (int i = 1; i < args.length - 1; i++) {
+			if(args[i].getClass().isAssignableFrom(ListTerm.class)){
+				ListTerm bag = (ListTerm) args[i];
+				for (Term object : bag) {
+					hash += object.toString();
+				}
+			} else {
+				hash += args[i].toString();
+			}
 		}
+		
 		hash += (new Date()).getTime();
-		String name = type + "_" + Math.abs(hash.hashCode());
-		return un.unifies(args[4], Literal.parseLiteral(name));
+		
+		String prefix = args[0].toString();
+		String name = prefix + "_" + Math.abs(hash.hashCode());
+		
+		return un.unifies(args[args.length - 1], Literal.parseLiteral(name));
 	}
+
 }

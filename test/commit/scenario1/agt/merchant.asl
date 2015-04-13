@@ -1,13 +1,14 @@
 /* Beliefs */
-goal( g1 , true    , paid(_)  , deadline(_) ).
-goal( g3 , paid(_) , goods(_) , deadline(_) ).
+goods(20).
+money(0).
 
-commitment( c1 , debtor   , [customer] , paid(_)     , goods(_)  ).
-commitment( c2 , debtor   , [customer] , accepted(_) , goods(_)  ).
-commitment( c3 , debtor   , [customer] , returned(_) , goods(_)  ).
-commitment( c4 , debtor   , [customer] , returned(_) , refund(_) ).
-commitment( c5 , creditor , [customer] , goods(_)    , paid(_)   ).
-commitment( c6 , creditor , [customer] , accepted(_) , goods(_)  ).
+goal( makeoffer   , money(Q) & Q < 20              , answer(_) , deadline(_) ).
+goal( givegoods   , goods(20) & accepted           , goods(0)  , deadline(_) ).
+goal( wantmoney   , goods(0) & money(0) & accepted , money(20) , deadline(_) ).
+goal( returngoods , goods(0) & money(0) & rejected , goods(20) , deadline(_) ).
+
+commitment( makeoffer , debtor , customer , offer(_) , answer(_) ). // merchant give offer if fuck yeah
+commitment( givegood  , debtor , customer , goods(_) , money(_) ). // merchant give goods if accepted
 
 /* Initial goals */	
 !start.
@@ -15,30 +16,27 @@ commitment( c6 , creditor , [customer] , accepted(_) , goods(_)  ).
 /* Plans */
 +!start
 <-
-	!achieveGoals;
+	!achieve_goals;
 	.
 	
-+!detach(C, Dbag)
-	: commit_var(C, Ct, _, Cr, _) & Ct == c1
++!detach(Gt, Ct, Cr, Bag):
+	Gt == offer
 <-
-	.print("Send ", Dbag, " goods");
-	!deliver(Cr, Dbag)
+	print(Gt, " ", Ct, " ", Cr, " ", Bag);
 	.
 
-+!deliver(Ag, What)
-	: true
++money(HowMuch)[source(A)]:
+	A \== self & money(Current)
 <-
-	.send(Ag, tell, What);
+	-money(_);
+	+money(Current + HowMuch);
+	.print("Hooray! ", HowMuch, " money!");
 	.
-    
-+!sendRefund
-	: true
+
++goods(HowMuch)[source(A)]:
+	A \== self & goods(Current)
 <-
-	.send(customer, tell, goods(10));
-	.
-    
-+!manufactureGoods
-	: true
-<-
-	.send(customer, tell, goods(10));
+	-goods(_);
+	+goods(Current + HowMuch);
+	.print("Return of ", HowMuch, " goods!");
 	.

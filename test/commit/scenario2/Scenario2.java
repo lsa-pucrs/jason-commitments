@@ -1,18 +1,18 @@
-package commit.scenario1;
+package commit.scenario2;
 
-import jason.infra.centralised.RunCentralisedMAS;
+import jacamo.infra.JaCaMoLauncher;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class Scenario1 {
+public class Scenario2 {
 
 	@Before
 	public void setUp() throws Exception {
 
-		String[] args = new String[] { "test/commit/scenario1/scenario1.jcm" };
+		String[] args = new String[] { "test/commit/scenario2/scenario2.jcm" };
 
-		RunCentralisedMAS runner = new RunCentralisedMAS();
+		JaCaMoLauncher runner = new JaCaMoLauncher();
 		runner.init(args);
 		runner.getProject().addSourcePath("/media/Storage/Documents/Master/repos/jason-commitments/src/commit/agt");
 		runner.create();

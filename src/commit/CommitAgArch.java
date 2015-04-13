@@ -1,15 +1,15 @@
 package commit;
 
 import jacamo.infra.JaCaMoAgArch;
+import jason.JasonException;
 import jason.asSemantics.Agent;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
-import jason.asSyntax.Pred;
 import jason.asSyntax.Rule;
-import jason.asSyntax.directives.Directive;
-import jason.asSyntax.directives.Include;
 import jason.asSyntax.parser.ParseException;
+import jason.asSyntax.parser.as2j;
 
+import java.io.InputStream;
 import java.util.Map;
 
 import commit.model.Commit;
@@ -23,14 +23,7 @@ public class CommitAgArch extends JaCaMoAgArch {
 		
 		super.init();
 		
-		Agent dump = new Agent();
-		// TODO Get file as resource
-		dump.setASLSrc("/media/Storage/Documents/Master/repos/jason-commitments/src/commit/agt/committer.asl");
-		
-		Pred pred = new Pred(Literal.parseLiteral("include(\"committer.asl\")"));
-		Directive include = new Include();
-		Agent process = include.process(pred, dump, null);
-		getTS().getAg().importComponents(process);
+		loadCommitter();
 		
 		addRule("null(C)", "not var(C)");
 		addRule("detached(C)", "active(C) & p(C)");
@@ -41,6 +34,7 @@ public class CommitAgArch extends JaCaMoAgArch {
 		addRule("satisfied(C)", "not null(C) & not terminal(C) & commitment(C, _, _, _, Y) & Y");
 		addRule("terminal(C)", "( cancelled(C) | released(C) | expired(C) )");
 
+		addRule("null(Gt, Bag)", "not goal_var(_, Gt, Bag)");
 		addRule("inactiveG(G)", "not null(G) & not suspendedG(G) & not activeG(G) & not terminalG(G)");
 		addRule("activeG(G)", "activatedG(G) & not terminalG(G) & not suspendedG(G) & not satisfiedG(G)"); 
 		addRule("satisfiedG(G)", "not null(G) & not terminalG(G)");
@@ -53,6 +47,15 @@ public class CommitAgArch extends JaCaMoAgArch {
 		addRule("eqCPCQ(C1, C2)", "commitment(C1, _, _, X, _) & commitment(C2, _, _, Y, _) & ( ( not X | Y ) & ( X | not Y ) )");
 	}
 	
+	public void loadCommitter() throws ParseException, JasonException{		
+		InputStream committer = this.getClass().getClassLoader().getResourceAsStream("./commit/agt/committer.asl");
+		Agent ag = new Agent();
+		ag.initAg();
+		as2j parser = new as2j(committer);
+		parser.agent(ag);
+		getTS().getAg().importComponents(ag);
+	}
+
 	public void addRule(String head, String body) {
 		try {
 			Rule belief = new Rule(Literal.parseLiteral(head), ASSyntax.parseFormula(body));

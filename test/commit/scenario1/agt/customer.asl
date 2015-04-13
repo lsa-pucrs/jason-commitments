@@ -1,16 +1,15 @@
 /* Beliefs */
-needgoods(123).
-needgoods(345).
+goods(0).
+money(20).
+commit(money(20)[transaction(5)]).
 
-goal( g2 , needgoods(_) , goods(_) , deadline(_) ).
-goal( g4 , goods(_)     , paid(_)  , deadline(_) ).
+goal( wantfood   , goods(Q) & Q < 20    , offer(_)  , deadline(_) ).
+goal( willpay    , offer(Q) & Q <= 1.50 , goods(20) , deadline(_) ).
+goal( willnotpay , offer(Q) & Q > 1.50  , true      , deadline(_) ).
+goal( payforfood , goods(20) & offer(_) , money(0)  , deadline(_) ).
 
-commitment(c1, creditor , [merchant] , paid(_)     , goods(_)  ).
-commitment(c2, creditor , [merchant] , accepted    , goods     ).
-commitment(c3, creditor , [merchant] , returned(_) , goods(_)  ).
-commitment(c4, creditor , [merchant] , returned(_) , refund(_) ).
-commitment(c5, debtor   , [merchant] , goods(_)    , paid(_)   ).
-commitment(c6, debtor   , [merchant] , accepted(_) , goods(_)  ).
+commitment( makeoffer , creditor , merchant , answer(_) , offer(_) ). // merchant give offer if fuck yeah
+commitment( givegood  , creditor , merchant , money(_)  , goods(_) ). // merchant give goods if accepted
 
 /* Initial goals */
 !start.
@@ -18,9 +17,13 @@ commitment(c6, debtor   , [merchant] , accepted(_) , goods(_)  ).
 /* Plans */
 +!start
 <-
-	!achieveGoals;
+	!achieve_goals;
 	.
-	
-+goods(HowMuch) <-
+
++goods(HowMuch)[source(A)]:
+	A \== self & goods(Current)
+<-
+	-goods(_);
+	+goods(Current + HowMuch);
 	.print("Hooray! ", HowMuch, " goods!");
-	-needgoods(HowMuch).
+	.
