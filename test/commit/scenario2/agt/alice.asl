@@ -15,26 +15,8 @@
 +!start:
 	true
 <-	
-	!create(bob, paid(12), delivered(bnw));
-	.wait(2000);
-	!create(bob, paid(12), delivered(bnw));
-	
-	!reboot;
-
-	!create(bob, paid(12), delivered(bnw));
-	.wait(1000);
-	!create(bob, paid(12), delivered(bnw));
-	.wait(1000);
-	
-	!reboot;
-	
-	!create(bob, paid(12), delivered(bnw));
-	.wait(2000);
-	!cancel(1);
-	
-	!reboot;
-	
-	.wait(1000);
-	!create(bob, paid(12), delivered(bnw));
-	
+	commit.functions.agents(Ags, "^bob[0-9]+");
+	for(.member(Ag, Ags)){
+		!create(Ag, paid(12), delivered(bnw));
+	}
 	.

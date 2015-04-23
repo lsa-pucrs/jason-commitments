@@ -47,7 +47,13 @@
 	}
 	+Statement;
 	.send(Agent, tell , statement(Statement)[t(Id)]);
-	.print("Declarate sended");
+	.print("Declarate sended ", Transaction);
+	.
+	
+-!declare(Statement[t(Transaction)])
+	: true
+<-
+	.print("Inexistant transaction ", Transaction);
 	.
 	
 +statement(Statement)[t(Transaction),source(Agent)]:
@@ -60,14 +66,14 @@
 	if(Antescedent1){
 		-commit(_, _, _, _)[t(Transaction)];
 		+commit(Debtor1, Creditor1, true, Consequent1)[t(Transaction)];
-		.print("Detached");
+		.print("Detached ", Transaction);
 	}
 	
 	?commit(Debtor2, Creditor2, Antescedent2, Consequent2)[t(Transaction)];
 	if(Consequent2){
 		-commit(_, _, _, _)[t(Transaction)];
 		+commit(Debtor2, Creditor2, Antescedent2, true)[t(Transaction)];
-		.print("Discharged");
+		.print("Discharged ", Transaction);
 	}
 	-statement(_);
 	.
@@ -76,8 +82,10 @@
 	: true
 <-
 	?commit(Debtor, _, _, _)[t(Transaction)];
-	.send(Debtor, tell, release(Transaction));
+	?extid(Debtor, Id, Transaction);
+	.send(Debtor, tell, release(Id));
 	-commit(Debtor, _, _, _)[t(Transaction)];
+	-extid(Debtor, _, Transaction);
 	.print("Commit released");
 	.
 	
@@ -96,6 +104,7 @@
 	.print("Commit release received");
 	.
 	
+// Who creates, cancels
 +!cancel(Transaction)
 	: true
 <-
@@ -114,8 +123,10 @@
 +cancel(Transaction)[source(Debtor)]:
 	true
 <-
+	?extid(Debtor, Id, Transaction);
 	-cancel(Transaction)[source(Debtor)];
-	-commit(Debtor, _, _, _)[t(Transaction)];
+	-commit(Debtor, _, _, _)[t(Id)];
+	-extid(Debtor, _, Transaction);
 	.print("Commit cancel received");
 	.
 	

@@ -2,11 +2,16 @@ mas scenario1 {
 	
     agent alice {
     	ag-arch: commit.CommitAlignAgArch
-    	instances: 1
+    	instances: 10
     }
     
     agent bob {
     	ag-arch: commit.CommitAlignAgArch
+    	instances: 10
+    }
+    
+    agent snapshooter {
+    	ag-arch: commit.SnapshooterAgArch
     	instances: 1
     }
     

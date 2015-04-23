@@ -3,7 +3,6 @@ package commit;
 import jacamo.infra.JaCaMoAgArch;
 import jason.JasonException;
 import jason.asSemantics.Agent;
-import jason.asSemantics.Message;
 import jason.asSyntax.Literal;
 import jason.asSyntax.parser.ParseException;
 import jason.asSyntax.parser.as2j;
@@ -26,25 +25,6 @@ public class CommitAlignAgArch extends JaCaMoAgArch {
 		parser.agent(ag);
 		getTS().getAg().addBel(Literal.parseLiteral("id(1)"));
 		getTS().getAg().importComponents(ag);
-	}
-
-	@Override
-	public void sendMsg(Message m) throws Exception {
-		super.sendMsg(m);
-	}
-
-	@Override
-	public void checkMail() {
-		super.checkMail();
-//		Queue<Message> mbox = getTS().getC().getMailBox();
-//		Iterator<Message> i = mbox.iterator();
-//		while (i.hasNext()) {
-//			Message im = i.next();
-//			Object propCont = im.getPropCont();
-//			if (propCont instanceof Literal) {
-//				Literal lit = (Literal) propCont;
-//			}
-//		}
 	}
 
 }
