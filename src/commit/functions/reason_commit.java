@@ -75,9 +75,9 @@ public class reason_commit extends DefaultInternalAction {
 		return true;
 	}
 
-	protected Literal generateCommitLiteral(Term debtor, Term creditor, Term antescedent, Term consequent, Term id) {
+	protected Literal generateCommitLiteral(Term debtor, Term creditor, Term antecedent, Term consequent, Term id) {
 		
-		// commit(Debtor, Creditor, Antescedent, Consequent)[t(Id)];
+		// commit(Debtor, Creditor, Antecedent, Consequent)[t(Id)];
 		
 		ListTerm ca = new ListTermImpl();
 		
@@ -87,7 +87,7 @@ public class reason_commit extends DefaultInternalAction {
 		
 		cat.add(debtor);
 		cat.add(creditor);
-		cat.add(antescedent);
+		cat.add(antecedent);
 		cat.add(consequent);
 		
 		ca.add(cat);

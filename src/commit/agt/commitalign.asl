@@ -1,33 +1,33 @@
-+!create(Creditor, Antescedent, Consequent)
++!create(Creditor, Antecedent, Consequent)
 	: true
 <-
 	?id(Id);
-	!create(Id, Creditor, Antescedent, Consequent);
+	!create(Id, Creditor, Antecedent, Consequent);
 	-+id(Id+1);
 	.
 
-+!create(Id, Creditor, Antescedent, Consequent)
++!create(Id, Creditor, Antecedent, Consequent)
 	: true
 <-	
-	commit.functions.add_annot(Antescedent, t(Id), A);
+	commit.functions.add_annot(Antecedent, t(Id), A);
 	commit.functions.add_annot(Consequent, t(Id), C);
 	.my_name(Debtor);
 
 	.send(Creditor, tell , create(A, C));
-	+commit(Debtor, Creditor, Antescedent, Consequent)[t(Id)];
+	+commit(Debtor, Creditor, Antecedent, Consequent)[t(Id)];
 	commit.functions.reason_commit(Debtor, Creditor, A, C, Id, Commit);
 	.print("Commitment created");
 	.
 
-+create(Antescedent, Consequent)[source(Debtor)]:
-	commit.functions.checktransaction(Antescedent, Consequent)
++create(Antecedent, Consequent)[source(Debtor)]:
+	commit.functions.checktransaction(Antecedent, Consequent)
 <-
-	-create(Antescedent, Consequent)[source(Debtor)];
+	-create(Antecedent, Consequent)[source(Debtor)];
 	.my_name(Creditor);
-	commit.functions.gettransaction(EId, Antescedent, Consequent);
+	commit.functions.gettransaction(EId, Antecedent, Consequent);
 	?id(Id);
 	+extid(Debtor, EId, Id);
-	+commit(Debtor, Creditor, Antescedent, Consequent)[t(Id)];
+	+commit(Debtor, Creditor, Antecedent, Consequent)[t(Id)];
 	-+id(Id+1);
 	.print("Commitment create received");
 	.
@@ -62,17 +62,17 @@
 	+Statement[t(Transaction)];
 	.print("Declarate received");
 	
-	?commit(Debtor1, Creditor1, Antescedent1, Consequent1)[t(Transaction)];
-	if(Antescedent1){
+	?commit(Debtor1, Creditor1, Antecedent1, Consequent1)[t(Transaction)];
+	if(Antecedent1){
 		-commit(_, _, _, _)[t(Transaction)];
 		+commit(Debtor1, Creditor1, true, Consequent1)[t(Transaction)];
 		.print("Detached ", Transaction);
 	}
 	
-	?commit(Debtor2, Creditor2, Antescedent2, Consequent2)[t(Transaction)];
+	?commit(Debtor2, Creditor2, Antecedent2, Consequent2)[t(Transaction)];
 	if(Consequent2){
 		-commit(_, _, _, _)[t(Transaction)];
-		+commit(Debtor2, Creditor2, Antescedent2, true)[t(Transaction)];
+		+commit(Debtor2, Creditor2, Antecedent2, true)[t(Transaction)];
 		.print("Discharged ", Transaction);
 	}
 	-statement(_);
